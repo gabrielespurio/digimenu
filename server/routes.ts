@@ -255,6 +255,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const data = insertProductSchema.parse(req.body);
       
+      // Handle "none" categoryId as null
+      if (data.categoryId === "none") {
+        data.categoryId = null;
+      }
+      
       let imageUrl = null;
       if (req.file) {
         imageUrl = `/uploads/${req.file.filename}`;
@@ -289,6 +294,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const data = insertProductSchema.partial().parse(req.body);
+      
+      // Handle "none" categoryId as null
+      if (data.categoryId === "none") {
+        data.categoryId = null;
+      }
       
       if (req.file) {
         data.imageUrl = `/uploads/${req.file.filename}`;
