@@ -8,6 +8,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -164,7 +165,7 @@ export default function ProductModal({ isOpen, onClose, product, categories }: P
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-md">
+      <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle data-testid="product-modal-title">
             {product ? "Editar Produto" : "Adicionar Produto"}
@@ -278,26 +279,25 @@ export default function ProductModal({ isOpen, onClose, product, categories }: P
             </div>
           </div>
 
-          <div className="flex space-x-3 pt-4">
-            <Button
-              type="button"
-              variant="outline"
-              className="flex-1"
-              onClick={onClose}
-              data-testid="cancel-product-button"
-            >
-              Cancelar
-            </Button>
-            <Button
-              type="submit"
-              className="flex-1"
-              disabled={mutation.isPending}
-              data-testid="save-product-button"
-            >
-              {mutation.isPending ? "Salvando..." : "Salvar Produto"}
-            </Button>
-          </div>
         </form>
+        
+        <DialogFooter>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={onClose}
+            data-testid="cancel-product-button"
+          >
+            Cancelar
+          </Button>
+          <Button
+            onClick={form.handleSubmit(onSubmit)}
+            disabled={mutation.isPending}
+            data-testid="save-product-button"
+          >
+            {mutation.isPending ? "Salvando..." : "Salvar Produto"}
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
