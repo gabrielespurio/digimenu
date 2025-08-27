@@ -61,3 +61,4 @@ VITE_STRIPE_PUBLIC_KEY=pk_test_your_stripe_public_key
 # Development
 PORT=5000
 NODE_ENV=development
+# digimenu
