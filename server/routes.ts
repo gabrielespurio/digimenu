@@ -38,8 +38,8 @@ const upload = multer({
     }
   }),
   limits: { 
-    fileSize: 20 * 1024 * 1024, // 20MB - para imagens de alta qualidade
-    fieldSize: 20 * 1024 * 1024 // 20MB - limite do campo
+    fileSize: 50 * 1024 * 1024, // 50MB - para imagens de altíssima qualidade
+    fieldSize: 50 * 1024 * 1024 // 50MB - limite do campo
   },
   fileFilter: (req, file, cb) => {
     // Aceita formatos de imagem de alta qualidade

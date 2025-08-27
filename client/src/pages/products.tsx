@@ -242,8 +242,9 @@ export default function Products() {
               <img
                 src={product.imageUrl}
                 alt={product.name}
-                className="w-full h-64 object-cover"
+                className="w-full h-80 object-cover cursor-pointer hover:opacity-90 transition-opacity"
                 data-testid={`product-image-${product.id}`}
+                onClick={() => window.open(product.imageUrl, '_blank')}
               />
             )}
             <CardContent className="p-4">

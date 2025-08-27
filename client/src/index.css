@@ -8,6 +8,19 @@ img {
   image-rendering: -webkit-optimize-contrast;
   image-rendering: crisp-edges;
   image-rendering: optimizeQuality;
+  transform: translateZ(0); /* Force hardware acceleration */
+  backface-visibility: hidden; /* Smooth rendering */
+  perspective: 1000px; /* Better 3D rendering */
+}
+
+/* Específico para imagens de produtos */
+[data-testid*="product-image"] {
+  object-fit: cover;
+  object-position: center;
+  will-change: transform; /* Optimize for animations */
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: optimizeQuality;
+  image-rendering: auto; /* Let browser choose best rendering */
 }
 
 :root {

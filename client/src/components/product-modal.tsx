@@ -126,11 +126,11 @@ export default function ProductModal({ isOpen, onClose, product, categories }: P
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      // Validação de tamanho - até 20MB
-      if (file.size > 20 * 1024 * 1024) {
+      // Validação de tamanho - até 50MB
+      if (file.size > 50 * 1024 * 1024) {
         toast({
           title: "Arquivo muito grande",
-          description: "A imagem deve ter no máximo 20MB.",
+          description: "A imagem deve ter no máximo 50MB.",
           variant: "destructive",
         });
         return;
@@ -243,8 +243,9 @@ export default function ProductModal({ isOpen, onClose, product, categories }: P
                   <img
                     src={previewUrl}
                     alt="Preview"
-                    className="w-full h-64 object-cover rounded-lg"
+                    className="w-full h-80 object-cover rounded-lg cursor-pointer hover:opacity-90 transition-opacity"
                     data-testid="product-image-preview"
+                    onClick={() => window.open(previewUrl, '_blank')}
                   />
                   <Button
                     type="button"
@@ -263,7 +264,7 @@ export default function ProductModal({ isOpen, onClose, product, categories }: P
                 <Upload className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
                 <div className="text-sm text-muted-foreground space-y-1">
                   <p>Clique para fazer upload ou arraste uma imagem</p>
-                  <p className="text-xs">Suporta JPEG, PNG, WebP, TIFF - até 20MB</p>
+                  <p className="text-xs">Suporta JPEG, PNG, WebP, TIFF - até 50MB</p>
                 </div>
                 <input
                   type="file"
