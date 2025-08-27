@@ -13,13 +13,15 @@ import { storage } from "./storage";
 import { insertUserSchema, insertRestaurantSchema, insertProductSchema, insertCategorySchema } from "@shared/schema";
 import { z } from "zod";
 
-// Stripe setup
-if (!process.env.STRIPE_SECRET_KEY) {
-  throw new Error('Missing required Stripe secret: STRIPE_SECRET_KEY');
+// Stripe setup - optional for development
+let stripe: Stripe | null = null;
+if (process.env.STRIPE_SECRET_KEY) {
+  stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+    apiVersion: "2023-10-16",
+  });
+} else {
+  console.warn('STRIPE_SECRET_KEY not found - subscription features will be disabled');
 }
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: "2023-10-16",
-});
 
 // File upload setup
 const uploadsDir = path.join(process.cwd(), 'uploads');
@@ -450,6 +452,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/create-subscription', async (req, res) => {
     if (!req.isAuthenticated()) {
       return res.sendStatus(401);
+    }
+
+    if (!stripe) {
+      return res.status(503).json({ 
+        error: { message: 'Subscription service is not available. Please configure Stripe.' }
+      });
     }
 
     let user = req.user as any;
