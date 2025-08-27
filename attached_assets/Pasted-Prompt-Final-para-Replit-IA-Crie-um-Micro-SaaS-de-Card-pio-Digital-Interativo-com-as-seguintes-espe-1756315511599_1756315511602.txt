@@ -1,0 +1,81 @@
+Prompt Final para Replit IA
+
+Crie um Micro-SaaS de Cardápio Digital Interativo com as seguintes especificações:
+
+🎯 Objetivo
+
+Um sistema web que permite que restaurantes e lanchonetes criem seus cardápios digitais acessíveis por QR Code.
+
+Plano Free → permite cadastrar até 5 produtos no cardápio.
+
+Plano Pago (R$24,90/mês) → sem limite de produtos.
+
+🔧 Estrutura do Sistema
+
+1. Autenticação e Contas
+
+Cadastro/login de usuários com e-mail e senha.
+
+Diferenciar usuários free e premium.
+
+Controle do limite de produtos no plano free.
+
+2. Painel do Restaurante (Admin)
+
+CRUD de produtos (nome, preço, descrição, foto, categoria).
+
+Dashboard simples com quantidade de produtos cadastrados e alerta quando atingir limite do plano free.
+
+Configurações do restaurante (nome, logo, cores).
+
+Geração automática de QR Code para o cardápio público.
+
+3. Cardápio Público (para clientes finais)
+
+Página simples e responsiva que mostra: logo, nome do restaurante e lista de produtos.
+
+Produtos organizados por categorias.
+
+Busca/filtro de produtos.
+
+Visual clean, focado na experiência mobile.
+
+4. Pagamentos e Planos
+
+Integração com Stripe (ou outro gateway) para assinatura do plano premium (R$24,90/mês).
+
+Após pagamento, remover limitações de produtos.
+
+Se assinatura expirar, voltar ao plano free automaticamente.
+
+🛠️ Stack Técnica
+
+Frontend: React puro (sem Next.js) + Vite.
+
+Backend: Node.js com Express.
+
+Banco de Dados: PostgreSQL via Neon com a seguinte string de conexão:
+
+postgresql://neondb_owner:npg_i4MebKLRXYP5@ep-delicate-mode-acyswj2a-pooler.sa-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
+
+
+ORM: Prisma ou Sequelize.
+
+Deploy: configurar para rodar em um servidor da Contabo (backend + frontend na mesma instância).
+
+QR Code: usar biblioteca qrcode para gerar imagem acessível pelo cliente.
+
+Hospedagem de imagens: pode usar Cloudinary ou upload local simples.
+
+⚡ Requisitos Extras
+
+Código modular e bem organizado.
+
+Interface intuitiva e minimalista (ex: TailwindCSS).
+
+Documentação básica de como rodar o projeto.
+
+Estrutura para evolução futura (ex: adicionar pedidos ou reservas depois).
+
+👉 Tarefa da IA:
+Gerar todo o boilerplate inicial desse projeto (frontend + backend + banco + autenticação + CRUD de produtos + cardápio público + pagamento com Stripe) já pronto para rodar no Replit, conectado ao Neon PostgreSQL com a string de conexão fornecida, mas com deploy planejado para servidor externo (Contabo).
