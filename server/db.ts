@@ -17,7 +17,8 @@ if (!DATABASE_URL) {
 export const pool = new Pool({ 
   connectionString: DATABASE_URL,
   ssl: {
-    rejectUnauthorized: false
+    rejectUnauthorized: false,
+    checkServerIdentity: () => undefined
   }
 });
 export const db = drizzle({ client: pool, schema });
