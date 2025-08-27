@@ -14,11 +14,12 @@ const storage = multer.diskStorage({
 });
 
 const fileFilter = (req: Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
-  // Only allow image files
-  if (file.mimetype.startsWith("image/")) {
+  // Aceita formatos de imagem de alta qualidade
+  const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/tiff', 'image/heic', 'image/heif'];
+  if (allowedTypes.includes(file.mimetype)) {
     cb(null, true);
   } else {
-    cb(new Error("Only image files are allowed"));
+    cb(new Error("Apenas arquivos de imagem são permitidos (JPEG, PNG, WebP, TIFF, HEIC)"));
   }
 };
 
@@ -26,6 +27,6 @@ export const upload = multer({
   storage,
   fileFilter,
   limits: {
-    fileSize: 5 * 1024 * 1024, // 5MB limit
+    fileSize: 50 * 1024 * 1024, // 50MB limit - alta qualidade
   }
 });

@@ -137,11 +137,11 @@ export default function ProductModal({ isOpen, onClose, product, categories }: P
       }
 
       // Validação de tipo de arquivo
-      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/tiff'];
+      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/tiff', 'image/heic', 'image/heif'];
       if (!allowedTypes.includes(file.type)) {
         toast({
           title: "Formato não suportado",
-          description: "Use apenas imagens JPEG, PNG, WebP ou TIFF.",
+          description: "Use apenas imagens JPEG, PNG, WebP, TIFF ou HEIC.",
           variant: "destructive",
         });
         return;
@@ -243,9 +243,10 @@ export default function ProductModal({ isOpen, onClose, product, categories }: P
                   <img
                     src={previewUrl}
                     alt="Preview"
-                    className="w-full h-80 object-cover rounded-lg cursor-pointer hover:opacity-90 transition-opacity"
+                    className="w-full h-80 object-cover rounded-lg cursor-pointer hover:opacity-90 transition-opacity shadow-md"
                     data-testid="product-image-preview"
                     onClick={() => window.open(previewUrl, '_blank')}
+                    loading="lazy"
                   />
                   <Button
                     type="button"
@@ -264,11 +265,11 @@ export default function ProductModal({ isOpen, onClose, product, categories }: P
                 <Upload className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
                 <div className="text-sm text-muted-foreground space-y-1">
                   <p>Clique para fazer upload ou arraste uma imagem</p>
-                  <p className="text-xs">Suporta JPEG, PNG, WebP, TIFF - até 50MB</p>
+                  <p className="text-xs">Suporta JPEG, PNG, WebP, TIFF, HEIC - até 50MB para máxima qualidade</p>
                 </div>
                 <input
                   type="file"
-                  accept="image/jpeg,image/jpg,image/png,image/webp,image/tiff"
+                  accept="image/jpeg,image/jpg,image/png,image/webp,image/tiff,image/heic,image/heif"
                   onChange={handleFileChange}
                   className="hidden"
                   data-testid="input-product-image"

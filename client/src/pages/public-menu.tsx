@@ -208,9 +208,10 @@ export default function PublicMenu() {
                   <img
                     src={product.imageUrl}
                     alt={product.name}
-                    className="w-full h-72 object-cover cursor-pointer hover:opacity-90 transition-opacity"
+                    className="w-full h-72 object-cover cursor-pointer hover:opacity-90 transition-opacity shadow-sm"
                     data-testid={`product-image-${product.id}`}
                     onClick={() => window.open(product.imageUrl, '_blank')}
+                    loading="lazy"
                   />
                 )}
                 <CardContent className="p-4">
