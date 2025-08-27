@@ -99,11 +99,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Serve uploaded files
+  // Serve uploaded files with optimized headers
   app.use('/uploads', (req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
+    res.header('Cache-Control', 'public, max-age=31536000'); // Cache por 1 ano
+    res.header('Expires', new Date(Date.now() + 31536000000).toUTCString());
     next();
-  }, express.static(uploadsDir));
+  }, express.static(uploadsDir, {
+    maxAge: '1y', // Cache de 1 ano
+    etag: true, // Enable ETags para cache eficiente
+    lastModified: true // Enable Last-Modified headers
+  }));
 
   // Helper function to generate slug
   function generateSlug(name: string): string {

@@ -242,7 +242,7 @@ export default function Products() {
               <img
                 src={product.imageUrl}
                 alt={product.name}
-                className="w-full h-48 object-cover"
+                className="w-full h-64 object-cover"
                 data-testid={`product-image-${product.id}`}
               />
             )}

@@ -3,6 +3,13 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Otimização para imagens de alta qualidade */
+img {
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  image-rendering: optimizeQuality;
+}
+
 :root {
   --background: hsl(0 0% 100%);
   --foreground: hsl(222 84% 4.9%);

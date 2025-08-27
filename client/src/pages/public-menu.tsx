@@ -208,7 +208,7 @@ export default function PublicMenu() {
                   <img
                     src={product.imageUrl}
                     alt={product.name}
-                    className="w-full h-48 object-cover"
+                    className="w-full h-56 object-cover"
                     data-testid={`product-image-${product.id}`}
                   />
                 )}

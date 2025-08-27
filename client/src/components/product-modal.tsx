@@ -243,7 +243,7 @@ export default function ProductModal({ isOpen, onClose, product, categories }: P
                   <img
                     src={previewUrl}
                     alt="Preview"
-                    className="w-full h-32 object-cover rounded-lg"
+                    className="w-full h-64 object-cover rounded-lg"
                     data-testid="product-image-preview"
                   />
                   <Button
