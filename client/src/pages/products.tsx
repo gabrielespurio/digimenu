@@ -5,7 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Edit, Trash2, Search } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Plus, Edit, Trash2, Search, Tags } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import ProductModal from "@/components/product-modal";
@@ -29,6 +31,8 @@ export default function Products() {
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
+  const [newCategoryName, setNewCategoryName] = useState("");
 
   const { data: products = [], isLoading } = useQuery({
     queryKey: ['/api/products'],
@@ -58,6 +62,28 @@ export default function Products() {
     },
   });
 
+  const createCategoryMutation = useMutation({
+    mutationFn: async (name: string) => {
+      return await apiRequest("POST", "/api/categories", { name });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/categories'] });
+      setNewCategoryName("");
+      setIsCategoryModalOpen(false);
+      toast({
+        title: "Categoria criada",
+        description: "A categoria foi criada com sucesso.",
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Erro ao criar categoria",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+
   const filteredProducts = products.filter((product: Product) => {
     const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          (product.description && product.description.toLowerCase().includes(searchTerm.toLowerCase()));
@@ -79,6 +105,11 @@ export default function Products() {
     if (confirm(`Tem certeza que deseja deletar "${name}"?`)) {
       deleteMutation.mutate(id);
     }
+  };
+
+  const handleCreateCategory = () => {
+    if (!newCategoryName.trim()) return;
+    createCategoryMutation.mutate(newCategoryName.trim());
   };
 
   const canAddMore = user?.plan === 'premium' || products.length < 5;
@@ -106,15 +137,70 @@ export default function Products() {
           <h1 className="text-3xl font-bold">Produtos</h1>
           <p className="text-muted-foreground mt-1">Gerencie os itens do seu cardápio</p>
         </div>
-        <Button 
-          onClick={handleAdd} 
-          className="mt-4 sm:mt-0"
-          disabled={!canAddMore}
-          data-testid="add-product-button"
-        >
-          <Plus className="w-4 h-4 mr-2" />
-          Adicionar Produto
-        </Button>
+        <div className="flex gap-2 mt-4 sm:mt-0">
+          <Dialog open={isCategoryModalOpen} onOpenChange={setIsCategoryModalOpen}>
+            <DialogTrigger asChild>
+              <Button variant="outline" data-testid="manage-categories-button">
+                <Tags className="w-4 h-4 mr-2" />
+                Categorias
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Gerenciar Categorias</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="category-name">Nome da Categoria</Label>
+                  <Input
+                    id="category-name"
+                    placeholder="Ex: Bebidas, Pratos Principais..."
+                    value={newCategoryName}
+                    onChange={(e) => setNewCategoryName(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && handleCreateCategory()}
+                    data-testid="input-category-name"
+                  />
+                </div>
+                <div className="flex gap-2">
+                  <Button 
+                    onClick={handleCreateCategory}
+                    disabled={!newCategoryName.trim() || createCategoryMutation.isPending}
+                    data-testid="create-category-button"
+                  >
+                    {createCategoryMutation.isPending ? "Criando..." : "Criar Categoria"}
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    onClick={() => setIsCategoryModalOpen(false)}
+                    data-testid="cancel-category-button"
+                  >
+                    Cancelar
+                  </Button>
+                </div>
+                {categories.length > 0 && (
+                  <div className="mt-4">
+                    <Label>Categorias Existentes</Label>
+                    <div className="mt-2 space-y-2">
+                      {categories.map((category: any) => (
+                        <div key={category.id} className="flex items-center justify-between p-2 border rounded">
+                          <span>{category.name}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </DialogContent>
+          </Dialog>
+          <Button 
+            onClick={handleAdd} 
+            disabled={!canAddMore}
+            data-testid="add-product-button"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Adicionar Produto
+          </Button>
+        </div>
       </div>
 
       {/* Filters */}
