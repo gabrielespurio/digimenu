@@ -126,10 +126,22 @@ export default function ProductModal({ isOpen, onClose, product, categories }: P
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      if (file.size > 5 * 1024 * 1024) {
+      // Validação de tamanho - até 20MB
+      if (file.size > 20 * 1024 * 1024) {
         toast({
           title: "Arquivo muito grande",
-          description: "A imagem deve ter no máximo 5MB.",
+          description: "A imagem deve ter no máximo 20MB.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Validação de tipo de arquivo
+      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/tiff'];
+      if (!allowedTypes.includes(file.type)) {
+        toast({
+          title: "Formato não suportado",
+          description: "Use apenas imagens JPEG, PNG, WebP ou TIFF.",
           variant: "destructive",
         });
         return;
@@ -249,12 +261,13 @@ export default function ProductModal({ isOpen, onClose, product, categories }: P
               
               <label className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-4 block text-center cursor-pointer hover:border-muted-foreground/50 transition-colors">
                 <Upload className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
-                <p className="text-sm text-muted-foreground">
-                  Clique para fazer upload ou arraste uma imagem
-                </p>
+                <div className="text-sm text-muted-foreground space-y-1">
+                  <p>Clique para fazer upload ou arraste uma imagem</p>
+                  <p className="text-xs">Suporta JPEG, PNG, WebP, TIFF - até 20MB</p>
+                </div>
                 <input
                   type="file"
-                  accept="image/*"
+                  accept="image/jpeg,image/jpg,image/png,image/webp,image/tiff"
                   onChange={handleFileChange}
                   className="hidden"
                   data-testid="input-product-image"

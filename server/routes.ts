@@ -37,12 +37,17 @@ const upload = multer({
       cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
     }
   }),
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
+  limits: { 
+    fileSize: 20 * 1024 * 1024, // 20MB - para imagens de alta qualidade
+    fieldSize: 20 * 1024 * 1024 // 20MB - limite do campo
+  },
   fileFilter: (req, file, cb) => {
-    if (file.mimetype.startsWith('image/')) {
+    // Aceita formatos de imagem de alta qualidade
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/tiff'];
+    if (allowedTypes.includes(file.mimetype)) {
       cb(null, true);
     } else {
-      cb(new Error('Only image files are allowed!'), false);
+      cb(new Error('Apenas arquivos de imagem são permitidos (JPEG, PNG, WebP, TIFF)!'), false);
     }
   }
 });
