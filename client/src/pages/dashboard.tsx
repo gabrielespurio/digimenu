@@ -125,7 +125,7 @@ export default function Dashboard() {
           <CardHeader>
             <CardTitle>Ações Rápidas</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-3">
+          <CardContent className="space-y-4">
             <Link href="/products">
               <Button 
                 className="w-full justify-start bg-primary/5 hover:bg-primary/10 text-primary border-primary/20" 
