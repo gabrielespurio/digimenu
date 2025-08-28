@@ -125,10 +125,10 @@ export default function Dashboard() {
           <CardHeader>
             <CardTitle>Ações Rápidas</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-6">
             <Link href="/products">
               <Button 
-                className="w-full justify-start bg-primary/5 hover:bg-primary/10 text-primary border-primary/20" 
+                className="w-full justify-start bg-primary/5 hover:bg-primary/10 text-primary border-primary/20 mb-4" 
                 variant="outline"
                 data-testid="action-add-product"
               >
@@ -139,7 +139,7 @@ export default function Dashboard() {
             
             <Link href="/settings">
               <Button 
-                className="w-full justify-start" 
+                className="w-full justify-start mb-4" 
                 variant="outline"
                 data-testid="action-configure"
               >
