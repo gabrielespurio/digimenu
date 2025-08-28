@@ -17,7 +17,13 @@ import { useToast } from "@/hooks/use-toast";
 const restaurantSchema = z.object({
   name: z.string().min(1, "Nome é obrigatório"),
   description: z.string().optional(),
-  address: z.string().optional(),
+  cep: z.string().optional(),
+  street: z.string().optional(),
+  number: z.string().optional(),
+  complement: z.string().optional(),
+  neighborhood: z.string().optional(),
+  city: z.string().optional(),
+  state: z.string().optional(),
   phone: z.string().optional(),
   hours: z.string().optional(),
   primaryColor: z.string().optional(),
@@ -41,6 +47,7 @@ export default function Settings() {
   const [selectedColor, setSelectedColor] = useState("#059669");
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
+  const [isLoadingCep, setIsLoadingCep] = useState(false);
 
   const { data: restaurant, isLoading } = useQuery({
     queryKey: ['/api/restaurant'],
@@ -55,7 +62,13 @@ export default function Settings() {
     defaultValues: {
       name: "",
       description: "",
-      address: "",
+      cep: "",
+      street: "",
+      number: "",
+      complement: "",
+      neighborhood: "",
+      city: "",
+      state: "",
       phone: "",
       hours: "Segunda a Sábado: 11h às 23h",
       primaryColor: "#059669",
@@ -63,13 +76,52 @@ export default function Settings() {
     },
   });
 
+  // Função para buscar CEP
+  const handleCepSearch = async (cep: string) => {
+    const cleanCep = cep.replace(/\D/g, "");
+    if (cleanCep.length !== 8) return;
+
+    setIsLoadingCep(true);
+    try {
+      const response = await fetch(`https://viacep.com.br/ws/${cleanCep}/json/`);
+      const data = await response.json();
+      
+      if (!data.erro) {
+        form.setValue("street", data.logradouro || "");
+        form.setValue("neighborhood", data.bairro || "");
+        form.setValue("city", data.localidade || "");
+        form.setValue("state", data.uf || "");
+      } else {
+        toast({
+          title: "CEP não encontrado",
+          description: "Verifique se o CEP está correto.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Erro ao buscar CEP",
+        description: "Tente novamente mais tarde.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoadingCep(false);
+    }
+  };
+
   // Set form values when restaurant data is loaded
   useState(() => {
     if (restaurant) {
       form.reset({
         name: restaurant.name || "",
         description: restaurant.description || "",
-        address: restaurant.address || "",
+        cep: restaurant.cep || "",
+        street: restaurant.street || "",
+        number: restaurant.number || "",
+        complement: restaurant.complement || "",
+        neighborhood: restaurant.neighborhood || "",
+        city: restaurant.city || "",
+        state: restaurant.state || "",
         phone: restaurant.phone || "",
         hours: restaurant.hours || "Segunda a Sábado: 11h às 23h",
         primaryColor: restaurant.primaryColor || "#059669",
@@ -213,14 +265,97 @@ export default function Settings() {
                 />
               </div>
 
-              <div>
-                <Label htmlFor="address">Endereço</Label>
-                <Input
-                  id="address"
-                  placeholder="Rua, número, bairro"
-                  {...form.register("address")}
-                  data-testid="input-restaurant-address"
-                />
+              <div className="space-y-4">
+                <h3 className="text-lg font-medium">Endereço</h3>
+                
+                {/* CEP */}
+                <div>
+                  <Label htmlFor="cep">CEP</Label>
+                  <Input
+                    id="cep"
+                    placeholder="00000-000"
+                    {...form.register("cep")}
+                    onChange={(e) => {
+                      form.setValue("cep", e.target.value);
+                      if (e.target.value.replace(/\D/g, "").length === 8) {
+                        handleCepSearch(e.target.value);
+                      }
+                    }}
+                    disabled={isLoadingCep}
+                    data-testid="input-restaurant-cep"
+                  />
+                  {isLoadingCep && <p className="text-sm text-muted-foreground mt-1">Buscando CEP...</p>}
+                </div>
+
+                {/* Rua */}
+                <div>
+                  <Label htmlFor="street">Rua</Label>
+                  <Input
+                    id="street"
+                    placeholder="Nome da rua"
+                    {...form.register("street")}
+                    data-testid="input-restaurant-street"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  {/* Número */}
+                  <div>
+                    <Label htmlFor="number">Número</Label>
+                    <Input
+                      id="number"
+                      placeholder="123"
+                      {...form.register("number")}
+                      data-testid="input-restaurant-number"
+                    />
+                  </div>
+
+                  {/* Complemento */}
+                  <div>
+                    <Label htmlFor="complement">Complemento</Label>
+                    <Input
+                      id="complement"
+                      placeholder="Apto, sala, etc."
+                      {...form.register("complement")}
+                      data-testid="input-restaurant-complement"
+                    />
+                  </div>
+                </div>
+
+                {/* Bairro */}
+                <div>
+                  <Label htmlFor="neighborhood">Bairro</Label>
+                  <Input
+                    id="neighborhood"
+                    placeholder="Nome do bairro"
+                    {...form.register("neighborhood")}
+                    data-testid="input-restaurant-neighborhood"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  {/* Cidade */}
+                  <div>
+                    <Label htmlFor="city">Cidade</Label>
+                    <Input
+                      id="city"
+                      placeholder="Nome da cidade"
+                      {...form.register("city")}
+                      data-testid="input-restaurant-city"
+                    />
+                  </div>
+
+                  {/* Estado */}
+                  <div>
+                    <Label htmlFor="state">Estado</Label>
+                    <Input
+                      id="state"
+                      placeholder="SP"
+                      {...form.register("state")}
+                      data-testid="input-restaurant-state"
+                    />
+                  </div>
+                </div>
               </div>
 
               <div>
